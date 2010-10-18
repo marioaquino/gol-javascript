@@ -4,9 +4,9 @@ gol.Grid = function(r, c) {
   r = r || 0;
   c = c || 0;
 
-  grid = new Array(r);
+  var grid = new Array(r);
 
-  each = function(lam) {
+  var each = function(lam) {
     for(row = 0; row < r; row++) {
       if (!grid[row]) {
         grid[row] = new Array(c);
@@ -22,7 +22,7 @@ gol.Grid = function(r, c) {
         }
       }
     }
-  }
+  };
 
   each(); //Initialize the grid
 
