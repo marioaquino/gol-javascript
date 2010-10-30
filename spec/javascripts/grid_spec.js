@@ -9,7 +9,29 @@ describe("Grid initialization", function() {
     expect(g.rows()).toEqual(4);
     expect(g.columns()).toEqual(4);
   });
+
+  it("should be resizable", function() {
+    var g = new gol.Grid();
+    var setAndExpect = function(r, c) {
+      g.setRows(r);
+      g.setColumns(c);
+      expect(g.rows()).toEqual(r);
+      expect(g.columns()).toEqual(c);
+    };
+    setAndExpect(6, 9);
+    setAndExpect(4, 3);
+  });
+
 });
+
+var loop = function(g, lam) {
+  for(row = 0; row < g.rows(); row++) {
+    for(col = 0; col < g.columns(); col++) {
+      lam(row, col);
+    }
+  } 
+};
+
 
 describe("Grids cell knowledge", function() {
   var g;
@@ -17,22 +39,14 @@ describe("Grids cell knowledge", function() {
     g = new gol.Grid(5, 4);
   });
 
-  var loop = function(lam) {
-    for(row = 0; row < g.rows(); row++) {
-      for(col = 0; col < g.columns(); col++) {
-        lam(row, col);
-      }
-    } 
-  }
-
   it("should start off with cells at each coord", function() {
-    loop(function(row, col) {
+    loop(g, function(row, col) {
       expect(g.cellAt(row, col)).toBeDefined();
     });
   });
 
   it("should have all dead cells initially", function() {
-    loop(function(row, col) {
+    loop(g, function(row, col) {
       expect(g.cellAt(row,col).alive()).toBeFalsy();
     });
   });
@@ -46,7 +60,7 @@ describe("Grids cell knowledge", function() {
              [3, 3]
       ]);
 
-      loop(function(row, col) {
+      loop(g, function(row, col) {
         if(row === col) {
           expect(g.cellAt(row, col).alive()).toBeTruthy();
         } else {
@@ -55,6 +69,60 @@ describe("Grids cell knowledge", function() {
       });
     });
   });
+
+});
+
+describe("Evolving the grid", function() {
+  var g;
+  beforeEach(function() {
+    g = new gol.Grid(4, 4);
+  });
+
+  it("should have all dead cells after evolving from all dead cells", function() {
+    g.step();
+    loop(g, function(row, col) {
+      expect(g.cellAt(row, col).alive()).toBeFalsy();
+    });
+  });
+
+  it("should have all dead cells after evolving from one live cell", function() {
+    g.seed([[3, 3]]);
+    g.step();
+    loop(g, function(row, col) {
+      expect(g.cellAt(row, col).alive()).toBeFalsy();
+    });
+  });
+  
+  it("should have all dead cells after evolving from two live cells", function() {
+    g.seed([[2, 2], [2, 3]]);
+    g.step();
+    loop(g, function(row, col) {
+      expect(g.cellAt(row, col).alive()).toBeFalsy();
+    });
+  });
+  
+  it("should have live cells in the corners after evolving from all live cells", function() {
+    var seed = [];
+    var r, c, alive;
+    for(r = 0; r < g.rows(); r++) {
+      for(c = 0; c < g.columns(); c++) {
+        seed.push([r, c]);
+      }
+    }
+
+    g.seed(seed);
+    g.step();
+    
+    loop(g, function(row, col) {
+      alive = g.cellAt(row, col).alive();
+      if ((row === 0 || row === 3) && (col === 0 || col === 3)) { //0,0 0,3 3,0 3,3 corners
+        expect(alive).toBeTruthy();
+      } else {
+        expect(alive).toBeFalsy();
+      }
+    });
+  });
+  
 });
 
 

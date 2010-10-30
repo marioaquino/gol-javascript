@@ -9,4 +9,8 @@ gol.Cell = function(){
   this.revive = function() {
     status = true;
   }
+
+  this.kill = function() {
+    status = false;
+  }
 }
