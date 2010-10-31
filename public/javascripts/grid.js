@@ -6,6 +6,16 @@ gol.Grid = function(r, c) {
 
   var cells = [];
 
+  var that = this;
+
+  cells.columns = function() { //hack?
+    return that.columns();
+  };
+
+  cells.rows = function() {
+    return that.rows();
+  };
+
   var resize = function(rowCount, colCount) {
     cells.length = rowCount * colCount;
     for(var i = 0; i < cells.length; i++) {
@@ -50,8 +60,10 @@ gol.Grid = function(r, c) {
   };
 
   this.step = function() {
-    cells.forEach(function(cell) {
-      cell.kill();
+    cells.map(function(cell) {
+      return cell.evolve();
+    }).map(function(nextState) {
+      nextState.call();
     });
   };
 };
