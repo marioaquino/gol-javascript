@@ -112,7 +112,7 @@ describe("Evolving the grid", function() {
 
     g.seed(seed);
     g.step();
-    
+
     loop(g, function(row, col) {
       alive = g.cellAt(row, col).alive();
       if ((row === 0 || row === 3) && (col === 0 || col === 3)) { //0,0 0,3 3,0 3,3 corners

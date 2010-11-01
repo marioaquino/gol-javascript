@@ -53,7 +53,6 @@ gol.Grid = function(r, c) {
   };
 
   this.seed = function(liveCells) {
-    var that = this;
     liveCells.forEach(function(coord) {
       that.cellAt(coord[0], coord[1]).revive();
     });

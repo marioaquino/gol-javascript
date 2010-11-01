@@ -1,24 +1,52 @@
-describe("Cells", function() {
-  it("calculate their next state based on their neighbors", function() {
-    var mock = new gol.Cell();
-    spyOn(mock, 'alive').andReturn(false);
-    var grid = [mock, mock, mock, 
-                mock, null, mock, 
-                mock, mock, mock];
-    grid.columns = function() {
-      return 3;
-    };
-    grid.rows = function() {
-      return 3;
-    };
+describe("Cell", function() {
+  var dead, alive, cell;
+  var grid = [];
+  grid.columns = function() {
+    return 3;
+  };
+  grid.rows = function() {
+    return 3;
+  };
 
-    var cell = new gol.Cell(4, grid);
+  beforeEach(function() {
+    dead = new gol.Cell();
+    spyOn(dead, 'alive').andReturn(false);
 
-    cell.evolve();
+    alive = new gol.Cell();
+    spyOn(alive, 'alive').andReturn(true);
 
-    expect(mock.alive.callCount).toEqual(8);
-    expect(cell.alive()).toBeFalsy();
+    cell = new gol.Cell(4, grid);
   });
-  
-});  
+
+  afterEach(function() { 
+    grid.length = 0; 
+  });
+
+  function evolveAndAssert(aliveBefore, aliveAfter) {
+    var nextState = cell.evolve();
+
+    expect(dead.alive.callCount + alive.alive.callCount).toEqual(8);
+    expect(cell.alive()).toEqual(aliveBefore);
+
+    nextState();
+
+    expect(cell.alive()).toEqual(aliveAfter);
+  }
+
+  it("remains dead if all neighbors are dead", function() {
+    grid.push(dead, dead, dead, 
+              dead, null, dead, 
+              dead, dead, dead);
+
+    evolveAndAssert(false, false);
+  });
+
+  it("comes to life if there are three live neighbors", function() {
+    grid.push(alive, alive, alive, 
+              dead,  null,  dead, 
+              dead,  dead,  dead);
+
+    evolveAndAssert(false, true);
+  });
+});
 
