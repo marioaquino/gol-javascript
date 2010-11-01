@@ -38,10 +38,6 @@ var gol = gol || {};
 	    });
 	  };
 
-	console.log('creating alive function');
-	function alive() {
-	  return status;
-	};
 
 	console.log('creating gol.Cell function');
 	gol.Cell = function(myIndex, grid){
