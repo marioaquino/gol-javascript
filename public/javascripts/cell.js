@@ -2,6 +2,7 @@ var gol = gol || {};
 
 (function() {
 
+	  console.log('creating neighbors function');
 	  function neighbors() {
 	    var cols = this.grid.columns();
 		var self = this;
@@ -37,18 +38,24 @@ var gol = gol || {};
 	    });
 	  };
 
-
-	gol.Cell = function(myIndex, grid){
-		this.myIndex = myIndex;
-		this.grid = grid;
-	  this.status = false;
-
+	console.log('creating alive function');
+	function alive() {
+	  return status;
 	};
 
+	console.log('creating gol.Cell function');
+	gol.Cell = function(myIndex, grid){
+         this.myIndex = myIndex;
+         this.grid = grid;
+         this.status = false;
+	};
+
+	console.log('creating cell.alive function');
 	gol.Cell.prototype.alive = function() {
 	  return this.status;
 	};
 
+	console.log('creating cell.evolve function');
 	gol.Cell.prototype.evolve = function() {
 	  var liveNeighborsTotal = neighbors.call(this).reduce(function(total, cell) {
 	    return total + (cell.alive() ? 1 : 0);
@@ -63,10 +70,12 @@ var gol = gol || {};
 	  };
 	};
 
+	console.log('creating cell.revive function');
 	gol.Cell.prototype.revive = function() {
 	  this.status = true;
 	};
 
+	console.log('creating cell.kill function');
 	gol.Cell.prototype.kill = function() {
 	  this.status = false;
 	};
