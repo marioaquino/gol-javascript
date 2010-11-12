@@ -10,27 +10,28 @@ describe("Grid initialization", function() {
     expect(g.columns()).toEqual(4);
   });
 
-  it("should be resizable", function() {
+  function setAndExpect(r, c) {
     var g = new gol.Grid();
-    var setAndExpect = function(r, c) {
-      g.setRows(r);
-      g.setColumns(c);
-      expect(g.rows()).toEqual(r);
-      expect(g.columns()).toEqual(c);
-    };
+    g.setRows(r);
+    g.setColumns(c);
+    expect(g.rows()).toEqual(r);
+    expect(g.columns()).toEqual(c);
+  }
+
+  it("should be resizable", function() {
     setAndExpect(6, 9);
     setAndExpect(4, 3);
   });
 
 });
 
-var loop = function(g, lam) {
+function loop(g, lam) {
   for(row = 0; row < g.rows(); row++) {
     for(col = 0; col < g.columns(); col++) {
       lam(row, col);
     }
   } 
-};
+}
 
 
 describe("Grids cell knowledge", function() {
@@ -102,15 +103,13 @@ describe("Evolving the grid", function() {
   });
   
   it("should have live cells in the corners after evolving from all live cells", function() {
-    var seed = [];
-    var r, c, alive;
-    for(r = 0; r < g.rows(); r++) {
-      for(c = 0; c < g.columns(); c++) {
-        seed.push([r, c]);
-      }
-    }
+    var seed = [], r, c, alive;
+    loop(g, function(r, c) {
+      seed.push([r, c]);
+    });
 
     g.seed(seed);
+
     g.step();
 
     loop(g, function(row, col) {

@@ -1,6 +1,6 @@
 describe("Cell", function() {
-  var dead, alive, cell;
-  var grid = [];
+  var dead, alive, cell, grid = [];
+
   grid.columns = function() {
     return 3;
   };
